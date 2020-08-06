@@ -2,33 +2,51 @@ import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 import './styles.css';
+import api from '../../services/api';
 
-const TeacherItem = () => {
+interface TeacherItemProps {
+  itemData: {
+    id: string;
+    name: string;
+    avatar: string;
+    whatsapp: string;
+    bio: string;
+    subject: string;
+    cost: number;
+  } 
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ itemData }) => {
+  const createNewConnection = async () => {
+    await api.post('/connections', {
+      user_id: itemData.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img src="https://avatars1.githubusercontent.com/u/30529908?s=400&u=d90e713c54d559b135e5ec8b5b62e6b3626718dd&v=4" alt="Fagner Medeiros"/>
+        <img src={itemData.avatar} alt={itemData.name}/>
         <div>
-          <strong>Fagner Medeiros</strong>
-          <span>Programação</span>
+          <strong>{itemData.name}</strong>
+          <span>{itemData.subject}</span>
         </div>
       </header>
 
-      <p>
-        Entusiasta das melhores tecnoligias de programação web.
-        <br/>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Id facere placeat nisi, provident iure fuga sint quaerat.
-      </p>
+      <p>{itemData.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 20,00</strong>
+          <strong>{itemData.cost}</strong>
         </p>
-        <button>
+        <a 
+          onClick={createNewConnection}
+          href={`https://wa.me/5508396183212`}
+        >
           <img src={whatsappIcon} alt="Whatsapp"/>
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
